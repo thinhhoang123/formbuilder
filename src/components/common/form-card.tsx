@@ -1,3 +1,4 @@
+'use client';
 import {
   Card,
   CardAction,
@@ -8,10 +9,11 @@ import {
   CardTitle,
 } from '../ui/card';
 import { formatDistance } from 'date-fns';
-
 import { Form } from '@prisma/client';
 import { Typography } from '../typography';
 import { Badge } from '../ui/badge';
+import { useRouter } from 'next/navigation';
+
 export default function FormCard({
   form,
   className,
@@ -19,9 +21,11 @@ export default function FormCard({
   form: Form;
   className?: string;
 }) {
+  const router = useRouter();
   return (
     <Card
       className={`hover:border-primary hover:bg-primary/5 hover:cursor-pointer ${className}`}
+      onClick={() => router.push(`/builder/${form.id}`)}
     >
       <CardHeader>
         <CardTitle>{form.name}</CardTitle>
@@ -37,7 +41,7 @@ export default function FormCard({
               Published
             </Badge>
           ) : (
-            <Badge>Draft</Badge>
+            <Badge variant="outline">Draft</Badge>
           )}
         </CardAction>
       </CardHeader>
