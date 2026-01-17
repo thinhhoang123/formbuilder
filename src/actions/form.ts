@@ -55,3 +55,23 @@ export async function getFormById(id: number) {
 
   return form;
 }
+
+export async function updateFormName(id: number, newName: string) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+  const form = await prisma.form.update({
+    where: {
+      id: id,
+      userId: user.id,
+    },
+    data: {
+      name: newName,
+    },
+  });
+
+  if (!form) {
+    throw new Error('Form not found');
+  }
+}
