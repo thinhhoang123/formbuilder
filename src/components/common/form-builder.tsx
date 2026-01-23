@@ -13,9 +13,11 @@ import SidebarBtnElement from '../sidebar-btn-element';
 import Designer from '../designer';
 import { updateFormName } from '@/actions/form';
 import { toast } from 'sonner';
+import { validateStringsEqual } from '@/lib/utils';
 
 export default function FormBuilder({ form }: { form: Form }) {
   const handleChangeName = async (newName: string) => {
+    if (validateStringsEqual(form.name, newName)) return;
     try {
       await updateFormName(form.id, newName);
       toast('👍🏻 Update form name successfully');
