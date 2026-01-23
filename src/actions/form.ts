@@ -1,6 +1,7 @@
 'use server';
 import prisma from '@/lib/prisma';
 import { currentUser } from '@clerk/nextjs/server';
+import { Form } from '@prisma/client';
 
 export async function createForm() {
   const user = await currentUser();
@@ -34,4 +35,43 @@ export async function getFormsByUserId() {
     },
   });
   return forms;
+}
+
+export async function getFormById(id: number) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+  const form = await prisma.form.findUnique({
+    where: {
+      id: id,
+      userId: user.id,
+    },
+  });
+
+  if (!form) {
+    throw new Error('Form not found');
+  }
+
+  return form;
+}
+
+export async function updateFormName(id: number, newName: string) {
+  const user = await currentUser();
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+  const form = await prisma.form.update({
+    where: {
+      id: id,
+      userId: user.id,
+    },
+    data: {
+      name: newName,
+    },
+  });
+
+  if (!form) {
+    throw new Error('Form not found');
+  }
 }
